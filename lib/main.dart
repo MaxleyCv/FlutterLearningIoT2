@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_line/dotted_line.dart';
+import 'package:flutter/rendering.dart';
 
 
 void main() {
@@ -307,29 +308,55 @@ Widget _myTickets(Color greyColor){
   );
 }
 
-Widget _doubleDot(){
-  return Align(
-    alignment: Alignment.center,
-    child: Row(
-      children: <Widget>[
-        Container(
-          width: 20,
-          height: 20,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            color: Colors.grey,
+Widget _doubleDot(Color darkGreyColor){
+  return Container(
+      child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+          child: Align(
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Container(
+                  width: 14,
+                  height: 14,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(7)),
+                    color: darkGreyColor,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Container(
+                  width: 14,
+                  height: 14,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(7)),
+                    color: Colors.grey,
+                  ),
+                ),
+              )
+
+            ],
           ),
         ),
-        Container(
-          width: 20,
-          height: 20,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            color: Colors.grey,
-          ),
-        )
-      ],
-    ),
+      ),
+
+  );
+}
+
+
+Widget _newsKarte(){
+
+}
+
+
+Widget _newsFeed(){
+  return Container(
+
   );
 }
 
@@ -339,6 +366,7 @@ class _HomePageState extends State<HomePage> {
   Color buttonColor = Color.fromRGBO(255, 0, 0, 1.0);
   Color textColor = Color.fromRGBO(0, 0, 0, 1.0);
   Color greyColor = Color.fromRGBO(219, 219, 219, 1.0);
+  Color darkGreyColor = Color.fromRGBO(64, 64, 64, 1.0);
 
   TextStyle smallTextStyle = TextStyle(
     fontSize: 10,
@@ -445,16 +473,14 @@ class _HomePageState extends State<HomePage> {
                     children: <Widget>[
                       _chooseTicketOrMap(buttonColor, greyColor),
                       _myTickets(greyColor),
-                      _doubleDot(),
+                      _doubleDot(darkGreyColor),
                     ],
                   ),
                 )
               ]
-
           ),
         )
-
-    )
+      )
     );
   }
 }
