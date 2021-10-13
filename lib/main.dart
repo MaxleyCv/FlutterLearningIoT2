@@ -348,18 +348,6 @@ Widget _doubleDot(Color darkGreyColor){
   );
 }
 
-
-Widget _newsKarte(){
-
-}
-
-
-Widget _newsFeed(){
-  return Container(
-
-  );
-}
-
 class _HomePageState extends State<HomePage> {
 
   Color fontColor = Color.fromRGBO(255, 255, 255, 1.0);
