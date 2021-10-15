@@ -265,7 +265,7 @@ Widget _interTicketDashline(Color greyColor){
       ),
       DottedLine(
         dashColor: Colors.black,
-        lineLength: 100,
+        lineLength: 220,
       ),
       Align(
         child: Container(
