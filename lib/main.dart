@@ -1,4 +1,6 @@
 
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_line/dotted_line.dart';
@@ -67,24 +69,26 @@ Widget _classChosingBar(Widget iconButton, Function choose_class,
       Expanded(child: Padding(padding: EdgeInsets.only(left: 40),child:Icon(
           Icons.airline_seat_recline_normal_rounded
       )),),
-      Expanded(child: Column(
-
+      Expanded(child: Padding(padding: EdgeInsets.only(left: 20),
+      child:       Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Expanded(
             child: Padding(padding: EdgeInsets.only(top: 15),child: Text(
-              "2nd Class | 1 Ad",
+              "Klasse 2  |  1 Packung",
               style: smallTextStyle,
             ),
             ),),
           Expanded(
             child: Padding(padding: EdgeInsets.only(bottom: 5, top: 0),child: Text(
-              "Show fastest connections",
+              "Die schnellste Einheiten anzeigen",
               style: smallTextStyle,
             ),
             ),),
 
         ],
-      ), flex: 4),
+      ),),
+      flex: 4),
       Expanded(
         child: Container(),
         flex: 3,
@@ -261,7 +265,7 @@ Widget _interTicketDashline(Color greyColor){
       ),
       DottedLine(
         dashColor: Colors.black,
-        lineLength: 300,
+        lineLength: 100,
       ),
       Align(
         child: Container(
@@ -348,6 +352,59 @@ Widget _doubleDot(Color darkGreyColor){
   );
 }
 
+Widget _newsFeed(List<Widget> newsCards){
+  return Container(
+    height: 80,
+    child: ListView(
+      scrollDirection: Axis.horizontal,
+      children: newsCards,
+    ),
+  );
+}
+
+Widget _newsCard(Color whiteColor,
+    String sourceImage, String title, String text,
+    TextStyle titleStyle, TextStyle newsStyle){
+    return Container(height: 100,
+      child: Padding(padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+        child: Container(
+          decoration: BoxDecoration(
+            color: whiteColor,
+          ),
+          width: 300,
+          height: 100,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(sourceImage),
+                    fit: BoxFit.cover
+                  )
+                ),
+                width: 40,
+                height: 40,),
+              _newsColumn(title, text, titleStyle, newsStyle)
+            ],
+          ),
+        ),
+      ),);
+}
+
+Widget _newsColumn(String title, String text,
+    TextStyle titleStyle, TextStyle newsStyle){
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+      child: Text(title, style: titleStyle),),
+      Padding(padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+        child: Text(text, style: newsStyle),)
+    ],
+  );
+}
+
 class _HomePageState extends State<HomePage> {
 
   Color fontColor = Color.fromRGBO(255, 255, 255, 1.0);
@@ -371,9 +428,26 @@ class _HomePageState extends State<HomePage> {
     color: Colors.black,
   );
 
+  TextStyle newsTitleStyle = TextStyle(
+    fontSize: 14,
+    color: Colors.black,
+    fontWeight: FontWeight.bold
+  );
+
+  TextStyle newsTextStyle = TextStyle(
+    fontSize: 12,
+    color: Colors.black,
+    fontWeight: FontWeight.normal
+  );
 
   @override
   Widget build(BuildContext context) {
+    List<Widget> news = [
+      _newsCard(Colors.white, "assets/lviv_coat.png", "Keine Löwen mehr",
+          "Ab 13 September fahrt den Zug\nnach Lemberg nicht", newsTitleStyle, newsTextStyle),
+      _newsCard(Colors.white, "assets/onlyfans_logo.png", "Die Neuigkeiten von DB",
+          "Die Fotos von unsere Züge\nwerden nach Onlyfans hinzugefügt", newsTitleStyle, newsTextStyle),
+    ];
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -462,6 +536,8 @@ class _HomePageState extends State<HomePage> {
                       _chooseTicketOrMap(buttonColor, greyColor),
                       _myTickets(greyColor),
                       _doubleDot(darkGreyColor),
+                      _newsFeed(news),
+                      Container(height: 20,)
                     ],
                   ),
                 )
