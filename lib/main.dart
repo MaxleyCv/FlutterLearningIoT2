@@ -1,4 +1,11 @@
+
+import 'dart:ffi';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:dotted_line/dotted_line.dart';
+import 'package:flutter/rendering.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -9,105 +16,535 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      title: 'DB App',
+      home: HomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
+class HomePage extends StatefulWidget {
+  HomePage({Key? key}) : super(key: key);
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomePageState createState() => _HomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+Widget _destinationStationInput(Widget iconButton, Text hint, Function on_tap_function){
+  return Container(
+      child: GestureDetector(
+      onTap: (){},
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Expanded(child: Padding(
+                padding: EdgeInsets.only(left: 60),
+                child: hint,
+              ), flex: 5,),
+              Expanded(child: Padding(
+                padding: EdgeInsets.only(right: 40),
+                child: iconButton,
+              ), flex: 1,)
+            ],
+          ),
+          Padding(padding: EdgeInsets.only(left: 40, right: 40, bottom: 20),
+            child: Divider(
+              color: Colors.black,
+            ),
+          )
+        ],
+      )
+  ),
+    height: 60,
+  );
+}
 
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+
+Widget _classChosingBar(Widget iconButton, Function choose_class,
+    Function choose_mod, TextStyle smallTextStyle){
+  return Container(
+      child: Row(
+    children: <Widget>[
+      Expanded(child: Padding(padding: EdgeInsets.only(left: 40),child:Icon(
+          Icons.airline_seat_recline_normal_rounded
+      )),),
+      Expanded(child: Padding(padding: EdgeInsets.only(left: 20),
+      child:       Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Padding(padding: EdgeInsets.only(top: 15),child: Text(
+              "Klasse 2  |  1 Packung",
+              style: smallTextStyle,
+            ),
+            ),),
+          Expanded(
+            child: Padding(padding: EdgeInsets.only(bottom: 5, top: 0),child: Text(
+              "Die schnellste Einheiten anzeigen",
+              style: smallTextStyle,
+            ),
+            ),),
+
+        ],
+      ),),
+      flex: 4),
+      Expanded(
+        child: Container(),
+        flex: 3,
+
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+    ],
+  ),
+  height: 60,);
+}
+
+Widget _chooseDateTime(Function date_action, Function time_action,
+    Color greyColor, Color textColor, TextStyle calendar_text_style) {
+  return Container(
+      height: 45,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 40),
+        child: Container(
+          decoration: BoxDecoration(
+            color: greyColor,
+            borderRadius: BorderRadius.all(
+              Radius.circular(10)
+            )
+          ),
+          child: Row(
+            children: <Widget>[
+              Expanded(child: Padding(
+                padding: EdgeInsets.only(left: 5),
+                child: Icon(
+                  Icons.calendar_today,
+                  color: textColor,
+                ),
+              ), flex: 2,),
+              Expanded(child: Text(
+                  "Mit, 3 Sep",
+                  style: calendar_text_style,
+              ), flex: 4,),
+              Expanded(child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 2, vertical: 8),
+                child: VerticalDivider(
+                  color: textColor,
+                ),
+              ), flex: 1,),
+              Expanded(child: Padding(
+                padding: EdgeInsets.only(left: 5),
+                child: Icon(
+                  Icons.access_time_outlined,
+                  color: textColor,
+                ),
+              ), flex: 2,),
+              Expanded(child: Text(
+                  "Ausfahrt: 21:30",
+                  style: calendar_text_style,
+              ), flex: 4,)
+            ],
+          ),
+        ),
+      )
+  );
+}
+
+Widget _searchButton(Function search, Color buttonColor, Color fontColor){
+  return GestureDetector(
+    onTap: search(),
+    child: Container(
+      height: 45,
+      child: Container(
+
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 40),
+
+          child: Container(
+            decoration: BoxDecoration(
+              color: buttonColor,
+              borderRadius: BorderRadius.all(Radius.circular(10)),
+            ),
+
+            child: GestureDetector(
+                onTap: (){},
+                child: Row(children: <Widget>[
+                  Expanded(child: Text(
+                    "Suchen",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: fontColor,
+                      fontSize: 18,
+                    ),
+                  )),]
+                )),
+          ),
+        ),
+      ),
+    )
+  );
+}
+
+Widget _chooseTicketOrMap(Color buttonColor, Color greyColor){
+  return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 25),
+  child: Row(
+    children: <Widget>[
+      Expanded(child: Column(
+        children: <Widget>[
+          Icon(
+            Icons.airplane_ticket,
+            color: Colors.black,
+          ),
+          Divider(
+            color: buttonColor,
+            thickness: 3,
+          )
+        ],
+      )),
+      Expanded(child: Column(
+        children: <Widget>[
+          Icon(
+              Icons.map_outlined,
+              color: Colors.black,
+          ),
+          Divider(
+            color: greyColor,
+          )
+        ],),),
+    ],
+  ));
+}
+
+Widget _myTicketsTopText(){
+  return Align(
+    alignment: Alignment.centerLeft,
+    child: Padding(padding: EdgeInsets.only(top: 20, bottom: 20, left: 20),
+      child: Text(
+        "Meine Fahrkarten",
+        textAlign: TextAlign.left,
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold
+        ),
+      ),
+    ),
+  );
+}
+
+Widget _myTicketsBottomText(){
+  return Align(
+    alignment: Alignment.centerLeft,
+    child: Padding(padding: EdgeInsets.only(top: 20, bottom: 80, left: 20),
+      child: Text(
+        "Deine Fahrkarten werden hier nach der Booking erscheint",
+        textAlign: TextAlign.left,
+        style: TextStyle(
+            fontSize: 14,
+        ),
+      ),
+    ),
+  );
+}
+
+Widget _interTicketDashline(Color greyColor){
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: <Widget>[
+      Align(
+        child: Container(
+          height: 20,
+          width: 10,
+          decoration: BoxDecoration(
+              color: greyColor,
+              borderRadius: BorderRadius.horizontal(
+                  right: Radius.circular(10)
+              )
+          ),
+        ),
+        alignment: Alignment.centerLeft,
+      ),
+      DottedLine(
+        dashColor: Colors.black,
+        lineLength: 220,
+      ),
+      Align(
+        child: Container(
+          height: 20,
+          width: 10,
+          decoration: BoxDecoration(
+              color: greyColor,
+              borderRadius: BorderRadius.horizontal(
+                  left: Radius.circular(10)
+              )
+          ),
+        ),
+        alignment: Alignment.centerRight,
+      ),
+    ],
+  );
+}
+
+Widget _myTickets(Color greyColor){
+  return Container(
+    child: Padding(
+      padding: EdgeInsets.symmetric(horizontal: 40),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+            boxShadow: [
+              BoxShadow(
+                  color: Colors.black,
+                  spreadRadius: -5,
+                  blurRadius: 5,
+                  offset: Offset(0, 3)
+              ),
+            ]
+        ),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+            _myTicketsTopText(),
+            _interTicketDashline(greyColor),
+            _myTicketsBottomText(),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    ),
+  );
+}
+
+Widget _doubleDot(Color darkGreyColor){
+  return Container(
+      child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+          child: Align(
+          alignment: Alignment.center,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Container(
+                  width: 14,
+                  height: 14,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(7)),
+                    color: darkGreyColor,
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 5),
+                child: Container(
+                  width: 14,
+                  height: 14,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(7)),
+                    color: Colors.grey,
+                  ),
+                ),
+              )
+
+            ],
+          ),
+        ),
+      ),
+
+  );
+}
+
+Widget _newsFeed(List<Widget> newsCards){
+  return Container(
+    height: 80,
+    child: ListView(
+      scrollDirection: Axis.horizontal,
+      children: newsCards,
+    ),
+  );
+}
+
+Widget _newsCard(Color whiteColor,
+    String sourceImage, String title, String text,
+    TextStyle titleStyle, TextStyle newsStyle){
+    return Container(height: 100,
+      child: Padding(padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+        child: Container(
+          decoration: BoxDecoration(
+            color: whiteColor,
+          ),
+          width: 300,
+          height: 100,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage(sourceImage),
+                    fit: BoxFit.cover
+                  )
+                ),
+                width: 40,
+                height: 40,),
+              _newsColumn(title, text, titleStyle, newsStyle)
+            ],
+          ),
+        ),
+      ),);
+}
+
+Widget _newsColumn(String title, String text,
+    TextStyle titleStyle, TextStyle newsStyle){
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Padding(padding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+      child: Text(title, style: titleStyle),),
+      Padding(padding: EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+        child: Text(text, style: newsStyle),)
+    ],
+  );
+}
+
+class _HomePageState extends State<HomePage> {
+
+  Color fontColor = Color.fromRGBO(255, 255, 255, 1.0);
+  Color buttonColor = Color.fromRGBO(255, 0, 0, 1.0);
+  Color textColor = Color.fromRGBO(0, 0, 0, 1.0);
+  Color greyColor = Color.fromRGBO(219, 219, 219, 1.0);
+  Color darkGreyColor = Color.fromRGBO(64, 64, 64, 1.0);
+
+  TextStyle smallTextStyle = TextStyle(
+    fontSize: 10,
+    color: Color.fromRGBO(0, 0, 0, 1.0),
+  );
+
+  TextStyle hintTextStyle = TextStyle(
+    fontSize: 14,
+    color: Colors.black,
+  );
+
+  TextStyle callendarTextStyle = TextStyle(
+    fontSize: 10,
+    color: Colors.black,
+  );
+
+  TextStyle newsTitleStyle = TextStyle(
+    fontSize: 14,
+    color: Colors.black,
+    fontWeight: FontWeight.bold
+  );
+
+  TextStyle newsTextStyle = TextStyle(
+    fontSize: 12,
+    color: Colors.black,
+    fontWeight: FontWeight.normal
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> news = [
+      _newsCard(Colors.white, "assets/lviv_coat.png", "Keine Löwen mehr",
+          "Ab 13 September fahrt den Zug\nnach Lemberg nicht", newsTitleStyle, newsTextStyle),
+      _newsCard(Colors.white, "assets/onlyfans_logo.png", "Die Neuigkeiten von DB",
+          "Die Fotos von unsere Züge\nwerden nach Onlyfans hinzugefügt", newsTitleStyle, newsTextStyle),
+    ];
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+            "Plannung",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: textColor,
+              fontSize: 15,
+            ),
+        ),
+        backgroundColor: fontColor,
+        foregroundColor: fontColor,
+        leading: Icon(
+          Icons.menu,
+          color: textColor,
+        ),
+        actions: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(right: 20),
+            child: GestureDetector(
+              onTap: () {},
+              child: Icon(
+                Icons.access_time_filled_sharp,
+                color: textColor,
+              ),
+            ),
+          ),
+        ],
+        ),
+      body: SingleChildScrollView(
+        child: Container(
+          color: greyColor,
+          child: Column(
+              children: <Widget>[
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                            color: Colors.grey,
+                            spreadRadius: 5,
+                            blurRadius: 7,
+                            offset: Offset(1, 3)
+                        ),
+                      ]
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      Container(
+                        height: 20,
+                      ),
+                      _destinationStationInput(
+                          Icon(Icons.gps_fixed, color: textColor,),
+                          Text(
+                            "Von",
+                            style: hintTextStyle,
+                          ),
+                              (){}),
+                      _destinationStationInput(
+                        Icon(Icons.swap_vert_outlined),
+                        Text(
+                          "Nach",
+                          style: hintTextStyle,
+                        ),
+                            (){},
+                      ),
+                      _chooseDateTime((){}, (){}, greyColor, textColor, callendarTextStyle),
+                      _classChosingBar(Icon(
+                        Icons.airline_seat_recline_normal,
+                        color: Colors.black,
+                      ),
+                              (){},
+                              (){},
+                          smallTextStyle),
+                      _searchButton((){}, buttonColor, fontColor),
+                      Container(
+                        height: 20,
+                      )
+                    ],
+                  ),
+                ),
+                Container(
+                  child: Column(
+                    children: <Widget>[
+                      _chooseTicketOrMap(buttonColor, greyColor),
+                      _myTickets(greyColor),
+                      _doubleDot(darkGreyColor),
+                      _newsFeed(news),
+                      Container(height: 20,)
+                    ],
+                  ),
+                )
+              ]
+          ),
+        )
+      )
     );
   }
 }
